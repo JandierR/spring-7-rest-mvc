@@ -2,11 +2,13 @@ package guru.springframework.spring7restmvc.services;
 
 import guru.springframework.spring7restmvc.model.Beer;
 import guru.springframework.spring7restmvc.model.BeerStyle;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Service
 public class BeerServiceImpl implements BeerService {
     @Override
     public Beer getBeerById(UUID id) {
