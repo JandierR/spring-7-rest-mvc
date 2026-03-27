@@ -4,6 +4,7 @@ import guru.springframework.spring7restmvc.model.Beer;
 import guru.springframework.spring7restmvc.model.BeerStyle;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -69,6 +70,24 @@ public class BeerServiceImpl implements BeerService {
         log.debug("Get Beer ID in service. Id = " + id.toString());
 
         return beerMap.get(id);
+    }
+
+    @Override
+    public Beer saveNewBeer(@RequestBody Beer beer) {
+        Beer savedBeer = Beer.builder()
+                .id(UUID.randomUUID())
+                .createdDate(LocalDateTime.now())
+                .updateDate(LocalDateTime.now())
+                .version(1)
+                .beerName(beer.getBeerName())
+                .price(beer.getPrice())
+                .upc(beer.getUpc())
+                .beerStyle(beer.getBeerStyle())
+                .quantityOnHand(beer.getQuantityOnHand())
+                .build();
+
+        beerMap.put(savedBeer.getId(), savedBeer);
+        return savedBeer;
     }
 
 }
