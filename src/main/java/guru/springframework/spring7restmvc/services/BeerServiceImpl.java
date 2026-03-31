@@ -86,7 +86,7 @@ public class BeerServiceImpl implements BeerService {
                 .quantityOnHand(beer.getQuantityOnHand())
                 .build();
 
-        beerMap.put(savedBeer.getId(), savedBeer);
+//        beerMap.put(savedBeer.getId(), savedBeer);
         return savedBeer;
     }
 
@@ -100,6 +100,11 @@ public class BeerServiceImpl implements BeerService {
         existing.setUpdateDate(LocalDateTime.now());
 
         beerMap.put(existing.getId(), existing);
+    }
+
+    @Override
+    public void deleteById(UUID beerId) {
+        beerMap.remove(beerId);
     }
 
 }
