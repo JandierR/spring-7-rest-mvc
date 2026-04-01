@@ -4,6 +4,7 @@ import guru.springframework.spring7restmvc.model.Customer;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.accept.ApiVersionStrategy;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -86,5 +87,12 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void deleteCustomerById(UUID customerId) {
         customerMap.remove(customerId);
+    }
+
+    @Override
+    public void patchCustomerById(UUID customerId, Customer customer) {
+        Customer existing = customerMap.get(customerId);
+
+        if (StringUtils.hasText(customer.getCustomerName())){ existing.setCustomerName(customer.getCustomerName());}
     }
 }
