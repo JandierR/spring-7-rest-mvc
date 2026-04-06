@@ -61,6 +61,7 @@ class CustomerControllerTest {
         Customer customer = customerServiceImpl.customerList().getFirst();
 
         Map<String, Object> customerMap = new HashMap<>();
+        customerMap.put("name", "New Name");
 
         mockMvc.perform(patch("/api/v1/customer/" + customer.getId())
                         .contentType(MediaType.APPLICATION_JSON)
