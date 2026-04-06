@@ -2,10 +2,8 @@ package guru.springframework.spring7restmvc.services;
 
 import guru.springframework.spring7restmvc.model.Customer;
 import lombok.extern.slf4j.Slf4j;
-import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import org.springframework.web.accept.ApiVersionStrategy;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDateTime;
@@ -15,10 +13,9 @@ import java.util.*;
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
-    private final ApiVersionStrategy mvcApiVersionStrategy;
     private Map<UUID, Customer> customerMap;
 
-    public CustomerServiceImpl(@Nullable ApiVersionStrategy mvcApiVersionStrategy) {
+    public CustomerServiceImpl() {
         this.customerMap = new HashMap<>();
 
         Customer customer1 = Customer.builder()
@@ -48,7 +45,6 @@ public class CustomerServiceImpl implements CustomerService {
         customerMap.put(customer1.getId(), customer1);
         customerMap.put(customer2.getId(), customer2);
         customerMap.put(customer3.getId(), customer3);
-        this.mvcApiVersionStrategy = mvcApiVersionStrategy;
     }
 
     @Override
