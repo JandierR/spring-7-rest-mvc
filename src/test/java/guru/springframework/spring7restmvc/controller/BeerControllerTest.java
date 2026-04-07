@@ -56,6 +56,14 @@ class BeerControllerTest {
     ArgumentCaptor<Beer> beerArgumentCaptor;
 
     @Test
+    void getBeerIdNotFound() throws Exception {
+
+        given(beerService.getBeerById(any(UUID.class))).willThrow(NotFoundException.class);
+        mockMvc.perform(get(BeerController.BEER_PATH_ID, UUID.randomUUID()))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
     void testPatchBeer() throws Exception {
         Beer beer = beerServiceImpl.beerList().getFirst();
 
