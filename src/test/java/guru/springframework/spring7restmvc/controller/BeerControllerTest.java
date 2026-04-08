@@ -16,10 +16,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import tools.jackson.databind.ObjectMapper;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -58,7 +55,7 @@ class BeerControllerTest {
     @Test
     void getBeerIdNotFound() throws Exception {
 
-        given(beerService.getBeerById(any(UUID.class))).willThrow(NotFoundException.class);
+        given(beerService.getBeerById(any(UUID.class))).willReturn(Optional.empty());
         mockMvc.perform(get(BeerController.BEER_PATH_ID, UUID.randomUUID()))
                 .andExpect(status().isNotFound());
     }
@@ -141,7 +138,7 @@ class BeerControllerTest {
     void getBeerById() throws Exception {
         Beer testBeer = beerServiceImpl.beerList().getFirst();
 
-        given(beerService.getBeerById(testBeer.getId())).willReturn(testBeer);
+        given(beerService.getBeerById(testBeer.getId())).willReturn(Optional.of(testBeer));
         mockMvc.perform(get(BeerController.BEER_PATH_ID, testBeer.getId())
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
