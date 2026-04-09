@@ -15,8 +15,8 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonDeserialize(builder = Beer.BeerBuilder.class)
-public class Beer {
+@JsonDeserialize(builder = BeerDTO.BeerDTOBuilder.class)
+public class BeerDTO {
     @JsonProperty("id")
     private UUID id;
 

@@ -15,9 +15,9 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonDeserialize(builder = Customer.CustomerBuilder.class)
+@JsonDeserialize(builder = CustomerDTO.CustomerDTOBuilder.class)
 
-public class Customer {
+public class CustomerDTO {
     @JsonProperty("customerName")
     private String customerName;
 
