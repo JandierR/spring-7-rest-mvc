@@ -1,10 +1,9 @@
 package guru.springframework.spring7restmvc.entities;
 
 import guru.springframework.spring7restmvc.model.CustomerDTO;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Version;
+import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.UuidGenerator;
 import tools.jackson.databind.annotation.JsonDeserialize;
 
 import java.time.LocalDateTime;
@@ -20,6 +19,9 @@ import java.util.UUID;
 public class Customer {
 
     @Id
+    @GeneratedValue(generator = "UUID")
+    @UuidGenerator
+    @Column(length = 36, columnDefinition = "varchar", updatable = false, nullable = false)
     private UUID id;
 
     @Version
