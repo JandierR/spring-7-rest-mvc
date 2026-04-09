@@ -19,6 +19,7 @@ class BeerRepositoryTest {
                 .beerName("New Name")
                 .build());
 
+        assertThat(beer).isNotNull();
         assertThat(beer.getId()).isNotNull();
     }
 }
