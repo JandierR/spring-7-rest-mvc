@@ -11,6 +11,7 @@ import tools.jackson.databind.cfg.MapperBuilder;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @Primary
@@ -42,11 +43,16 @@ public class CustomerServiceJPA implements CustomerService {
     }
 
     @Override
-    public void updateCustomerById(UUID customerID, CustomerDTO customer) {
-        customerRepository.findById(customerID).ifPresent(updatedCustomer ->{
+    public Optional<CustomerDTO> updateCustomerById(UUID customerID, CustomerDTO customer) {
+        AtomicReference<Optional<CustomerDTO>> atomicReference = new AtomicReference<>();
+
+        customerRepository.findById(customerID).ifPresentOrElse(updatedCustomer -> {
             updatedCustomer.setCustomerName(customer.getCustomerName());
-            customerRepository.save(updatedCustomer);
-        });
+            atomicReference.set(Optional.of(customerMapper.customerToCustomerDto(customerRepository.save(updatedCustomer))));
+        }, () ->
+                atomicReference.set(Optional.empty()));
+
+        return atomicReference.get();
     }
 
     @Override

@@ -26,8 +26,16 @@ class CustomerControllerIT {
 
     @Autowired
     CustomerRepository customerRepository;
+
     @Autowired
     private CustomerMapper customerMapper;
+
+    @Test
+    void testUpdateNotFound() {
+        assertThrows(NotFoundException.class, () -> {
+            customerController.updateById(UUID.randomUUID(), CustomerDTO.builder().build());
+        });
+    }
 
     @Test
     void updateExistingCustomer() {
