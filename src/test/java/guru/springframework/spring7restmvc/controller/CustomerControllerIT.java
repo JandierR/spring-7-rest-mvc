@@ -1,5 +1,6 @@
 package guru.springframework.spring7restmvc.controller;
 
+import guru.springframework.spring7restmvc.entities.Customer;
 import guru.springframework.spring7restmvc.model.CustomerDTO;
 import guru.springframework.spring7restmvc.repositories.CustomerRepository;
 import jakarta.transaction.Transactional;
@@ -9,8 +10,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 class CustomerControllerIT {
@@ -20,6 +23,22 @@ class CustomerControllerIT {
 
     @Autowired
     CustomerRepository customerRepository;
+
+    @Test
+    void testBeerIdNotFound() {
+        assertThrows(NotFoundException.class, () -> {
+            customerController.getCustomerById(UUID.randomUUID());
+        });
+    }
+
+    @Test
+    void testGetBeerById() {
+        Customer customer = customerRepository.findAll().getFirst();
+
+        CustomerDTO customerDTO = customerController.getCustomerById(customer.getId());
+
+        assertThat(customerDTO.getId()).isNotNull();
+    }
 
     @Test
     void testListCustomers() {
