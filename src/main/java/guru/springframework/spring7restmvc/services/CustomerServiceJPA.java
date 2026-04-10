@@ -6,6 +6,7 @@ import guru.springframework.spring7restmvc.repositories.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
+import tools.jackson.databind.cfg.MapperBuilder;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +20,7 @@ public class CustomerServiceJPA implements CustomerService {
 
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
+    private final MapperBuilder mapperBuilder;
 
     @Override
     public List<CustomerDTO> customerList() {
@@ -41,7 +43,10 @@ public class CustomerServiceJPA implements CustomerService {
 
     @Override
     public void updateCustomerById(UUID customerID, CustomerDTO customer) {
-
+        customerRepository.findById(customerID).ifPresent(updatedCustomer ->{
+            updatedCustomer.setCustomerName(customer.getCustomerName());
+            customerRepository.save(updatedCustomer);
+        });
     }
 
     @Override

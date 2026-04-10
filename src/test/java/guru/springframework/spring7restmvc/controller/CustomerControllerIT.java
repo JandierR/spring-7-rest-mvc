@@ -1,6 +1,7 @@
 package guru.springframework.spring7restmvc.controller;
 
 import guru.springframework.spring7restmvc.entities.Customer;
+import guru.springframework.spring7restmvc.mappers.CustomerMapper;
 import guru.springframework.spring7restmvc.model.CustomerDTO;
 import guru.springframework.spring7restmvc.repositories.CustomerRepository;
 import jakarta.transaction.Transactional;
@@ -25,6 +26,25 @@ class CustomerControllerIT {
 
     @Autowired
     CustomerRepository customerRepository;
+    @Autowired
+    private CustomerMapper customerMapper;
+
+    @Test
+    void updateExistingCustomer() {
+        Customer customer = customerRepository.findAll().getFirst();
+        CustomerDTO customerDTO = customerMapper.customerToCustomerDto(customer);
+
+        customerDTO.setId(null);
+        customerDTO.setVersion(null);
+        final String customerName = "UPDATED";
+        customerDTO.setCustomerName(customerName);
+
+        ResponseEntity responseEntity = customerController.updateById(customer.getId(), customerDTO);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.valueOf(204));
+
+        Customer savedCustomer = customerRepository.findById(customer.getId()).get();
+        assertThat(savedCustomer.getCustomerName()).isEqualTo(customerName);
+    }
 
     @Transactional
     @Rollback
