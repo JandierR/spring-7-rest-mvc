@@ -1,6 +1,6 @@
 package guru.springframework.spring7restmvc.services;
 
-import guru.springframework.spring7restmvc.bootstrap.BootstrapData;
+import guru.springframework.spring7restmvc.mappers.CustomerMapper;
 import guru.springframework.spring7restmvc.model.CustomerDTO;
 import guru.springframework.spring7restmvc.repositories.CustomerRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,23 +10,28 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Primary
 @RequiredArgsConstructor
 @Service
 public class CustomerServiceJPA implements CustomerService {
 
-    private final BootstrapData bootstrapData;
     private final CustomerRepository customerRepository;
+    private final CustomerMapper customerMapper;
 
     @Override
     public List<CustomerDTO> customerList() {
-        return List.of();
+        return customerRepository.findAll()
+                .stream()
+                .map(customerMapper::customerToCustomerDto)
+                .collect(Collectors.toList());
     }
 
     @Override
     public Optional<CustomerDTO> getCustomerById(UUID id) {
-        return Optional.empty();
+        return Optional.ofNullable(customerMapper.customerToCustomerDto(customerRepository.findById(id)
+                .orElse(null)));
     }
 
     @Override
