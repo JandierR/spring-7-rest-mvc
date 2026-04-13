@@ -5,6 +5,7 @@ import guru.springframework.spring7restmvc.model.BeerDTO;
 import guru.springframework.spring7restmvc.repositories.BeerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 public class BeerServiceJPA implements BeerService {
     private final BeerRepository beerRepository;
     private final BeerMapper beerMapper;
+    private final ResourcePatternResolver resourcePatternResolver;
 
     @Override
     public List<BeerDTO> beerList() {
@@ -59,7 +61,7 @@ public class BeerServiceJPA implements BeerService {
 
     @Override
     public void deleteById(UUID beerId) {
-
+        beerRepository.deleteById(beerId);
     }
 
     @Override

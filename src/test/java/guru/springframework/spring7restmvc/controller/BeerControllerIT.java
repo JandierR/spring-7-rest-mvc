@@ -5,6 +5,7 @@ import guru.springframework.spring7restmvc.mappers.BeerMapper;
 import guru.springframework.spring7restmvc.model.BeerDTO;
 import guru.springframework.spring7restmvc.repositories.BeerRepository;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,6 +19,7 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@Slf4j
 @SpringBootTest
 class BeerControllerIT {
 
@@ -29,6 +31,19 @@ class BeerControllerIT {
 
     @Autowired
     private BeerMapper beerMapper;
+
+
+    @Test
+    void deleteByIdFound() {
+        Beer beer = beerRepository.findAll().getFirst();
+
+        ResponseEntity responseEntity = beerController.deleteById(beer.getId());
+        assertThat(beerRepository.findById(beer.getId()).isEmpty());
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.valueOf(204));
+
+//        Beer foundBeer = beerRepository.findById(beer.getId()).get();
+//        assertThat(foundBeer).isNull();
+    }
 
     @Test
     void testUpdateNotFound() {
@@ -44,6 +59,8 @@ class BeerControllerIT {
         });
     }
 
+    @Transactional
+    @Rollback
     @Test
     void updateExistingBeer() {
         Beer beer = beerRepository.findAll().getFirst();
