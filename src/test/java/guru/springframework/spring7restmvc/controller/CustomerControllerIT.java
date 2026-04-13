@@ -31,6 +31,13 @@ class CustomerControllerIT {
     private CustomerMapper customerMapper;
 
     @Test
+    void testDeleteByIDNotFound() {
+        assertThrows(NotFoundException.class, () -> {
+            customerController.deleteById(UUID.randomUUID());
+        });
+    }
+
+    @Test
     void deleteByIdFound() {
         Customer customer = customerRepository.findAll().getFirst();
 
@@ -51,7 +58,7 @@ class CustomerControllerIT {
     @Rollback
     @Test
     void updateExistingCustomer() {
-        Customer customer = customerRepository.findAll().getFirst();
+        Customer customer = customerRepository.findAll().get(0);
         CustomerDTO customerDTO = customerMapper.customerToCustomerDto(customer);
 
         customerDTO.setId(null);
