@@ -37,6 +37,8 @@ class CustomerControllerIT {
         });
     }
 
+    @Transactional
+    @Rollback
     @Test
     void deleteByIdFound() {
         Customer customer = customerRepository.findAll().getFirst();
@@ -55,7 +57,7 @@ class CustomerControllerIT {
     }
     
     @Transactional
-    @Rollback
+//    @Rollback
     @Test
     void updateExistingCustomer() {
         Customer customer = customerRepository.findAll().get(0);

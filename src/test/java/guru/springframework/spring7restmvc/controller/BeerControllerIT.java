@@ -39,6 +39,8 @@ class BeerControllerIT {
         });
     }
 
+    @Transactional
+//    @Rollback
     @Test
     void deleteByIdFound() {
         Beer beer = beerRepository.findAll().getFirst();
@@ -69,7 +71,7 @@ class BeerControllerIT {
     @Rollback
     @Test
     void updateExistingBeer() {
-        Beer beer = beerRepository.findAll().getFirst();
+        Beer beer = beerRepository.findAll().get(0);
         BeerDTO beerDTO = beerMapper.beerToBeerDto(beer);
 
         beerDTO.setId(null);

@@ -6,6 +6,7 @@ import guru.springframework.spring7restmvc.repositories.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import tools.jackson.databind.cfg.MapperBuilder;
 
 import java.util.List;
@@ -65,7 +66,17 @@ public class CustomerServiceJPA implements CustomerService {
     }
 
     @Override
-    public void patchCustomerById(UUID customerId, CustomerDTO customer) {
+    public Optional<CustomerDTO> patchCustomerById(UUID customerId, CustomerDTO customer) {
+        AtomicReference<Optional<CustomerDTO>> atomicReference = new AtomicReference<>();
 
+        customerRepository.findById(customerId).ifPresentOrElse(updatedCustomer -> {
+            if (StringUtils.hasText(customer.getCustomerName())) {
+                updatedCustomer.setCustomerName(customer.getCustomerName());
+            }
+            atomicReference.set(Optional.of(customerMapper.customerToCustomerDto(customerRepository.save(updatedCustomer))));
+        }, () ->
+                atomicReference.set(Optional.empty()));
+
+        return atomicReference.get();
     }
 }
