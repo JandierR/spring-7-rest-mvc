@@ -1,0 +1,20 @@
+[
+  {
+    "beerStyle": "must not be null"
+  },
+  {
+    "price": "must not be null"
+  },
+  {
+    "upc": "must not be blank"
+  },
+  {
+    "upc": "must not be null"
+  },
+  {
+    "beerName": "must not be blank"
+  },
+  {
+    "beerName": "must not be null"
+  }
+]

@@ -14,6 +14,7 @@ import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import tools.jackson.databind.ObjectMapper;
 
 import java.util.*;
@@ -52,17 +53,42 @@ class BeerControllerTest {
     @Captor
     ArgumentCaptor<BeerDTO> beerArgumentCaptor;
 
+    //I have to do the update test method to test the @NotBlank and @NotNull
+
+
+    @Test
+    void testUpdateNullBear() throws Exception {
+        BeerDTO beerDTO = beerServiceImpl.beerList().get(0);
+        beerDTO.setBeerName("");
+        given(beerService.updateBeerById(any(), any())).willReturn(Optional.of(beerDTO));
+        System.out.println(beerDTO);
+
+        MvcResult updateMockMvc = mockMvc.perform(put(BeerController.BEER_PATH_ID, beerDTO.getId())
+                        .content(objectMapper.writeValueAsString(beerDTO))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.length()", is(1)))
+                .andExpect(status().isBadRequest()).andReturn();
+
+        System.out.println(updateMockMvc.getResponse().getContentAsString());
+    }
+
     @Test
     void testCreateBeerNullBeerName() throws Exception {
         BeerDTO beerDTO = BeerDTO.builder().build();
 
         given(beerService.saveNewBeer(any())).willReturn(beerServiceImpl.beerList().get(1));
 
-        mockMvc.perform(post(BeerController.BEER_PATH)
+
+
+        MvcResult myMockmvc = mockMvc.perform(post(BeerController.BEER_PATH)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(beerDTO)))
-                .andExpect(status().isBadRequest());
+                .andExpect(jsonPath("$.length()", is(6)))
+                .andExpect(status().isBadRequest()).andReturn();
+
+        System.out.println(myMockmvc.getResponse().getContentAsString());
     }
 
     @Test
@@ -113,9 +139,9 @@ class BeerControllerTest {
         given(beerService.updateBeerById(any(), any())).willReturn(Optional.of(beer));
 
         mockMvc.perform(put(BeerController.BEER_PATH_ID,  beer.getId())
-                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(beer))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(beer)))
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
         verify(beerService).updateBeerById(uuidArgumentCaptor.capture(), beerArgumentCaptor.capture());
@@ -123,11 +149,13 @@ class BeerControllerTest {
 
     @Test
     void testCreateNewBeer() throws Exception {
-        BeerDTO beer = beerServiceImpl.beerList().getFirst();
+        BeerDTO beer = beerServiceImpl.beerList().get(0);
         beer.setVersion(null);
         beer.setId(null);
 
-        given(beerService.saveNewBeer(any(BeerDTO.class))).willReturn(beerServiceImpl.beerList().get(1));
+        //Here I set empty any()'s because it worked. What I understand behind this behavior, since saveNewBeer(Beer)
+        //expects a Beer as an argument, that any will always behave as Beer.
+        given(beerService.saveNewBeer(any())).willReturn(beerServiceImpl.beerList().get(1));
 
         mockMvc.perform(post(BeerController.BEER_PATH)
                         .accept(MediaType.APPLICATION_JSON)

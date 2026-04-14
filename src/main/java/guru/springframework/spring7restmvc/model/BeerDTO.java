@@ -19,6 +19,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @JsonDeserialize(builder = BeerDTO.BeerDTOBuilder.class)
 public class BeerDTO {
+
+
     @JsonProperty("id")
     private UUID id;
 
@@ -30,15 +32,19 @@ public class BeerDTO {
     @JsonProperty("beerName")
     private String beerName;
 
+    @NotNull
     @JsonProperty("beerStyle")
     private BeerStyle beerStyle;
 
+    @NotNull
+    @NotBlank
     @JsonProperty("upc")
     private String upc;
 
     @JsonProperty("quantityOnHand")
     private Integer quantityOnHand;
 
+    @NotNull
     @JsonProperty("price")
     private BigDecimal price;
 
