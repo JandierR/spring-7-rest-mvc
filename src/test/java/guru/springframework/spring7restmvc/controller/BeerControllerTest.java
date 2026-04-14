@@ -53,6 +53,19 @@ class BeerControllerTest {
     ArgumentCaptor<BeerDTO> beerArgumentCaptor;
 
     @Test
+    void testCreateBeerNullBeerName() throws Exception {
+        BeerDTO beerDTO = BeerDTO.builder().build();
+
+        given(beerService.saveNewBeer(any())).willReturn(beerServiceImpl.beerList().get(1));
+
+        mockMvc.perform(post(BeerController.BEER_PATH)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(beerDTO)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void getBeerIdNotFound() throws Exception {
 
         given(beerService.getBeerById(any(UUID.class))).willReturn(Optional.empty());
