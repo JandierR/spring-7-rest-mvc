@@ -5,6 +5,7 @@ import guru.springframework.spring7restmvc.model.BeerStyle;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 import tools.jackson.databind.annotation.JsonDeserialize;
@@ -34,11 +35,14 @@ public class Beer {
 
     @NotNull
     @NotBlank
+    @Size(max = 50)
+    @Column(length = 50)
     private String beerName;
 
     @NotNull
     private BeerStyle beerStyle;
 
+    @Size(max = 255)
     @NotNull
     @NotBlank
     private String upc;
