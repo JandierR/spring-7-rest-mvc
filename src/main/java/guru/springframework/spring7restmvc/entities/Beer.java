@@ -43,7 +43,7 @@ public class Beer {
     private String beerName;
 
     @NotNull
-    @JdbcTypeCode(value = SqlTypes.SMALLINT)
+    @JdbcTypeCode(SqlTypes.SMALLINT)
     private BeerStyle beerStyle;
 
     @Size(max = 255)
