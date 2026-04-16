@@ -7,7 +7,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UuidGenerator;
+import org.hibernate.type.SqlTypes;
 import tools.jackson.databind.annotation.JsonDeserialize;
 
 import java.math.BigDecimal;
@@ -25,8 +27,9 @@ public class Beer {
 
     @Id
     @GeneratedValue(generator = "UUID")
+    @JdbcTypeCode(SqlTypes.CHAR)
     @UuidGenerator
-    @Column(length = 36, columnDefinition = "varchar", updatable = false, nullable = false)
+    @Column(length = 36, columnDefinition = "varchar(36)", updatable = false, nullable = false)
     private UUID id;
 
 
