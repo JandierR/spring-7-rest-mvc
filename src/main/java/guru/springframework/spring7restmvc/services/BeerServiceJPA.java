@@ -7,7 +7,6 @@ import guru.springframework.spring7restmvc.model.BeerStyle;
 import guru.springframework.spring7restmvc.repositories.BeerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
-import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -23,7 +22,6 @@ import java.util.stream.Collectors;
 public class BeerServiceJPA implements BeerService {
     private final BeerRepository beerRepository;
     private final BeerMapper beerMapper;
-    private final ResourcePatternResolver resourcePatternResolver;
 
     @Override
     public List<BeerDTO> beerList(String beerName, BeerStyle beerStyle) {
@@ -44,7 +42,7 @@ public class BeerServiceJPA implements BeerService {
     }
 
     public List<Beer> listBeerByStyle(BeerStyle beerStyle) {
-        return beerRepository.findAllByBeerStyle( beerStyle);
+        return beerRepository.findAllByBeerStyle(beerStyle);
     }
 
     public List<Beer> listBeerByName(String beerName) {
