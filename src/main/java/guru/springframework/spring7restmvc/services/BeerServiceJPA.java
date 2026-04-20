@@ -3,6 +3,7 @@ package guru.springframework.spring7restmvc.services;
 import guru.springframework.spring7restmvc.entities.Beer;
 import guru.springframework.spring7restmvc.mappers.BeerMapper;
 import guru.springframework.spring7restmvc.model.BeerDTO;
+import guru.springframework.spring7restmvc.model.BeerStyle;
 import guru.springframework.spring7restmvc.repositories.BeerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
@@ -25,13 +26,15 @@ public class BeerServiceJPA implements BeerService {
     private final ResourcePatternResolver resourcePatternResolver;
 
     @Override
-    public List<BeerDTO> beerList(String beerName) {
+    public List<BeerDTO> beerList(String beerName, BeerStyle beerStyle) {
 
         List<Beer> beerList;
 
-        if (StringUtils.hasText(beerName)) {
-            beerList = listBeerByName( beerName);
-        }else {
+        if (StringUtils.hasText(beerName) && beerStyle == null) {
+            beerList = listBeerByName(beerName);
+        } else if (!StringUtils.hasText(beerName) && beerStyle != null) {
+            beerList = listBeerByStyle(beerStyle);
+        } else {
             beerList = beerRepository.findAll();
         }
 
@@ -40,7 +43,11 @@ public class BeerServiceJPA implements BeerService {
                 .collect(Collectors.toList());
     }
 
-    private List<Beer> listBeerByName(String beerName) {
+    public List<Beer> listBeerByStyle(BeerStyle beerStyle) {
+        return beerRepository.findAllByBeerStyle( beerStyle);
+    }
+
+    public List<Beer> listBeerByName(String beerName) {
         return beerRepository.findAllByBeerNameIsLikeIgnoreCase("%" + beerName + "%");
     }
 
