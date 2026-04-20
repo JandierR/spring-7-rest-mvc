@@ -58,7 +58,7 @@ class BeerControllerTest {
 
     @Test
     void testUpdateNullBear() throws Exception {
-        BeerDTO beerDTO = beerServiceImpl.beerList(null, null).get(0);
+        BeerDTO beerDTO = beerServiceImpl.beerList(null, null, false).get(0);
         beerDTO.setBeerName("");
         given(beerService.updateBeerById(any(), any())).willReturn(Optional.of(beerDTO));
         System.out.println(beerDTO);
@@ -77,7 +77,7 @@ class BeerControllerTest {
     void testCreateBeerNullBeerName() throws Exception {
         BeerDTO beerDTO = BeerDTO.builder().build();
 
-        given(beerService.saveNewBeer(any())).willReturn(beerServiceImpl.beerList(null, null).get(1));
+        given(beerService.saveNewBeer(any())).willReturn(beerServiceImpl.beerList(null, null, false).get(1));
 
 
 
@@ -101,7 +101,7 @@ class BeerControllerTest {
 
     @Test
     void testPatchBeer() throws Exception {
-        BeerDTO beer = beerServiceImpl.beerList(null, null).getFirst();
+        BeerDTO beer = beerServiceImpl.beerList(null, null, false).getFirst();
 
         Map<String, Object> beerMap = new HashMap<>();
         beerMap.put("beerName", "New Name");
@@ -119,7 +119,7 @@ class BeerControllerTest {
 
     @Test
     void testDeleteBeer() throws Exception {
-        BeerDTO beer = beerServiceImpl.beerList(null, null).getFirst();
+        BeerDTO beer = beerServiceImpl.beerList(null, null, false).getFirst();
 
         given(beerService.deleteById(beer.getId())).willReturn(true);
 
@@ -134,7 +134,7 @@ class BeerControllerTest {
 
     @Test
     void testUpdateBeer() throws Exception {
-        BeerDTO beer = beerServiceImpl.beerList(null, null).getFirst();
+        BeerDTO beer = beerServiceImpl.beerList(null, null, false).getFirst();
 
         given(beerService.updateBeerById(any(), any())).willReturn(Optional.of(beer));
 
@@ -149,13 +149,13 @@ class BeerControllerTest {
 
     @Test
     void testCreateNewBeer() throws Exception {
-        BeerDTO beer = beerServiceImpl.beerList(null, null).get(0);
+        BeerDTO beer = beerServiceImpl.beerList(null, null, false).get(0);
         beer.setVersion(null);
         beer.setId(null);
 
         //Here I set empty any()'s because it worked. What I understand behind this behavior, since saveNewBeer(Beer)
         //expects a Beer as an argument, that any will always behave as Beer.
-        given(beerService.saveNewBeer(any())).willReturn(beerServiceImpl.beerList(null, null).get(1));
+        given(beerService.saveNewBeer(any())).willReturn(beerServiceImpl.beerList(null, null, null).get(1));
 
         mockMvc.perform(post(BeerController.BEER_PATH)
                         .accept(MediaType.APPLICATION_JSON)
@@ -167,9 +167,9 @@ class BeerControllerTest {
 
     @Test
     void testListBeers() throws Exception {
-        List<BeerDTO> beerList = beerServiceImpl.beerList(null, null);
+        List<BeerDTO> beerList = beerServiceImpl.beerList(null, null, false);
 
-        given(beerService.beerList(null, null)).willReturn(beerList);
+        given(beerService.beerList(null, null, null)).willReturn(beerList);
 
         mockMvc.perform(get(BeerController.BEER_PATH)
                         .accept(MediaType.APPLICATION_JSON))
@@ -181,7 +181,7 @@ class BeerControllerTest {
 
     @Test
     void getBeerById() throws Exception {
-        BeerDTO testBeer = beerServiceImpl.beerList(null, null).getFirst();
+        BeerDTO testBeer = beerServiceImpl.beerList(null, null, false).getFirst();
 
         given(beerService.getBeerById(testBeer.getId())).willReturn(Optional.of(testBeer));
         mockMvc.perform(get(BeerController.BEER_PATH_ID, testBeer.getId())
