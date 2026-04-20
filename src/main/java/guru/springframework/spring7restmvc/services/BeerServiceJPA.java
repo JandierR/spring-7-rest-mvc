@@ -1,5 +1,6 @@
 package guru.springframework.spring7restmvc.services;
 
+import guru.springframework.spring7restmvc.entities.Beer;
 import guru.springframework.spring7restmvc.mappers.BeerMapper;
 import guru.springframework.spring7restmvc.model.BeerDTO;
 import guru.springframework.spring7restmvc.repositories.BeerRepository;
@@ -9,6 +10,7 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -24,11 +26,23 @@ public class BeerServiceJPA implements BeerService {
     private final ResourcePatternResolver resourcePatternResolver;
 
     @Override
-    public List<BeerDTO> beerList() {
-        return beerRepository.findAll()
-                .stream()
+    public List<BeerDTO> beerList(String beerName) {
+
+        List<Beer> beerList;
+
+        if (StringUtils.hasText(beerName)) {
+            beerList = listBeerByName(beerName);
+        }else {
+            beerList = beerRepository.findAll();
+        }
+
+        return beerList.stream()
                 .map(beerMapper::beerToBeerDto)
                 .collect(Collectors.toList());
+    }
+
+    private List<Beer> listBeerByName(String beerName) {
+        return new ArrayList<>();
     }
 
     @Override
