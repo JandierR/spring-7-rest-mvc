@@ -10,7 +10,6 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -31,7 +30,7 @@ public class BeerServiceJPA implements BeerService {
         List<Beer> beerList;
 
         if (StringUtils.hasText(beerName)) {
-            beerList = listBeerByName(beerName);
+            beerList = listBeerByName( beerName);
         }else {
             beerList = beerRepository.findAll();
         }
@@ -42,7 +41,7 @@ public class BeerServiceJPA implements BeerService {
     }
 
     private List<Beer> listBeerByName(String beerName) {
-        return new ArrayList<>();
+        return beerRepository.findAllByBeerNameIsLikeIgnoreCase("%" + beerName + "%");
     }
 
     @Override
