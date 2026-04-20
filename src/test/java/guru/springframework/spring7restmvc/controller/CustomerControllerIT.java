@@ -115,7 +115,7 @@ class CustomerControllerIT {
     void testListCustomers() {
         List<CustomerDTO> dtos = customerController.customerList();
 
-        assertThat(dtos.size()).isEqualTo(1);
+        assertThat(dtos.size()).isEqualTo(3);
     }
 
     @Transactional
