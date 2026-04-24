@@ -1,6 +1,5 @@
 package guru.springframework.spring7restmvc.controller;
 
-import guru.springframework.spring7restmvc.config.SpringSecConfig;
 import guru.springframework.spring7restmvc.model.BeerDTO;
 import guru.springframework.spring7restmvc.services.BeerService;
 import guru.springframework.spring7restmvc.services.BeerServiceImpl;
@@ -12,7 +11,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
-import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -36,7 +34,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Import(SpringSecConfig.class)
 class BeerControllerTest {
 
     @Autowired
@@ -50,8 +47,8 @@ class BeerControllerTest {
 
     BeerServiceImpl beerServiceImpl;
 
-    private static final String USERNAME = "user1";
-    private static final String PASSWORD = "password";
+    public static final String USERNAME = "user1";
+    public static final String PASSWORD = "password";
 
 
     @BeforeEach
