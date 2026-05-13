@@ -1,12 +1,12 @@
 package guru.springframework.spring7restmvc.entities;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import guru.springframework.spring7restmvc.model.CustomerDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UuidGenerator;
 import org.hibernate.type.SqlTypes;
-import tools.jackson.databind.annotation.JsonDeserialize;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
