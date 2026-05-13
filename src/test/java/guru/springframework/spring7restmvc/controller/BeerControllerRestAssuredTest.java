@@ -1,9 +1,11 @@
 package guru.springframework.spring7restmvc.controller;
 
+import com.atlassian.oai.validator.OpenApiInteractionValidator;
+import com.atlassian.oai.validator.restassured.OpenApiValidationFilter;
+import com.atlassian.oai.validator.whitelist.ValidationErrorsWhitelist;
 import io.restassured.RestAssured;
-import io.restassured.config.HttpClientConfig;
-import io.restassured.config.RestAssuredConfig;
 import io.restassured.http.ContentType;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -15,11 +17,21 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.test.context.ActiveProfiles;
 
+import static com.atlassian.oai.validator.whitelist.rule.WhitelistRules.messageHasKey;
+import static io.restassured.RestAssured.given;
+
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Import(BeerControllerRestAssuredTest.TestConfig.class)
 @ComponentScan(basePackages = "guru.springframework.spring7restmvc")
 public class BeerControllerRestAssuredTest {
+
+    OpenApiValidationFilter filter = new OpenApiValidationFilter(OpenApiInteractionValidator
+            .createForSpecificationUrl("oa3.yml")
+            .withWhitelist(ValidationErrorsWhitelist.create()
+                    .withRule("Ignore date format",
+                    messageHasKey("validation.response.body.schema.format.date-time")))
+            .build());
 
     @Configuration
     public static class TestConfig{
@@ -35,18 +47,18 @@ public class BeerControllerRestAssuredTest {
     @LocalServerPort
     Integer localPort;
 
+    @BeforeEach
+    void setUp() {
+        RestAssured.port = localPort;
+        RestAssured.baseURI = "http://localhost";
+    }
+
     @Test
     void testListBeers() {
 
-        RestAssured
-                .given()
-                .config(RestAssuredConfig.config()
-                        .httpClient(HttpClientConfig.httpClientConfig()
-                                .setParam("http.route.default-proxy", null)))
-                .baseUri("http://localhost")
-                .port(localPort)
-                .contentType(ContentType.JSON)
+                given().contentType(ContentType.JSON)
                 .when()
+                .filter(filter)
                 .get("/api/v1/beer")
                 .then()
                 .statusCode(200);
