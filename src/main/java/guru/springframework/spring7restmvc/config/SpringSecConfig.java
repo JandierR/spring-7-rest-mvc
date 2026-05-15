@@ -15,12 +15,12 @@ public class SpringSecConfig {
 
     @Bean
     @Order(1)
-    public SecurityFilterChain actuatorSecurityFiltherChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain actuatorSecurityFilterChain(HttpSecurity http) throws Exception {
         http.securityMatcher(EndpointRequest.toAnyEndpoint()).authorizeHttpRequests(
                 authorize -> authorize
-                        .requestMatchers(EndpointRequest.toAnyEndpoint())
+                        .anyRequest()
                         .permitAll()
-        );  
+        );
 
         return http.build();
     }
